@@ -1,7 +1,6 @@
-use std::{error::Error, fmt};
-
-use fmt::Display;
 use inquire::{required, Select, Text};
+
+use super::prompt_error::{PromptError, PromptResult};
 
 pub struct Prompt {}
 
@@ -55,23 +54,3 @@ impl PromptInput {
         &self.commit_message
     }
 }
-
-#[derive(Debug)]
-pub struct PromptError {
-    message: String,
-}
-
-impl Display for PromptError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.message)
-    }
-}
-impl Error for PromptError {}
-
-impl PromptError {
-    fn new(message: String) -> Self {
-        PromptError { message: message }
-    }
-}
-
-type PromptResult<T> = Result<T, PromptError>;
