@@ -3,6 +3,7 @@ use std::{
     fmt::{self, Display, Formatter},
 };
 
+/// プロンプトのエラーを表現するカスタムエラー構造体です。
 #[derive(Debug)]
 pub struct PromptError {
     message: String,
@@ -21,6 +22,7 @@ impl PromptError {
     }
 }
 
+/// `PromptError`を`Result`型でラップした型です。
 pub type PromptResult<T> = Result<T, PromptError>;
 
 #[cfg(test)]

@@ -2,12 +2,17 @@ use inquire::{required, Select, Text};
 
 use super::prompt_error::{PromptError, PromptResult};
 
+/// プロンプト構造体です。
+///
+/// プロンプトを実際に実行するメソッドを提供します。
 pub struct Prompt {}
 
 impl Prompt {
     pub fn new() -> Self {
         Prompt {}
     }
+
+    /// プロンプトを実行してユーザーの入力を受け取ります。
     pub fn execute(&self) -> Result<PromptInput, PromptError> {
         let commit_type = Self::select_commit_type()?;
         let commit_message = Self::input_commit_message()?;
@@ -41,10 +46,12 @@ impl Prompt {
     }
 }
 
+/// プロンプトの入力値を保持する構造体です。
 pub struct PromptInput {
     commit_type: String,
     commit_message: String,
 }
+
 impl PromptInput {
     pub fn commit_type(&self) -> &str {
         &self.commit_type
