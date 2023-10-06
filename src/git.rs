@@ -14,11 +14,12 @@ pub fn execute(input: PromptInput) -> Result<(), Box<dyn Error>> {
 
     match output {
         Ok(output) => {
-            let std = String::from_utf8_lossy(&output.stderr).replace("\n", "");
+            let std_error = String::from_utf8_lossy(&output.stderr).replace("\n", "");
             if !output.status.success() {
-                return Err(From::from(format!("{}", std)));
+                return Err(From::from(format!("{:#?}", std_error)));
             }
 
+            let std = String::from_utf8_lossy(&output.stdout);
             println!("{}", std);
 
             Ok(())
