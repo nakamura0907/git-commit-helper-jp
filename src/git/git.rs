@@ -1,6 +1,6 @@
 use std::process::Command;
 
-use crate::prompt::PromptInput;
+use crate::prompt::UserResponse;
 
 use super::git_error::{GitError, GitResult};
 
@@ -12,7 +12,7 @@ pub struct GitExecutor {
 }
 
 impl GitExecutor {
-    pub fn new(input: &PromptInput) -> Self {
+    pub fn new(input: &UserResponse) -> Self {
         let mut parts = Vec::new();
 
         // コミットメッセージのヘッダーを作成

@@ -1,6 +1,9 @@
 use inquire::{required, Select, Text};
 
-use super::prompt_error::{PromptError, PromptResult};
+use super::{
+    prompt_error::{PromptError, PromptResult},
+    UserResponse,
+};
 
 /// プロンプト構造体です。
 ///
@@ -13,7 +16,7 @@ impl Prompt {
     }
 
     /// プロンプトを実行してユーザーの入力を受け取ります。
-    pub fn execute(&self) -> Result<PromptInput, PromptError> {
+    pub fn interact(&self) -> Result<UserResponse, PromptError> {
         let commit_type = Self::select_commit_type()?;
         let commit_message = Self::input_commit_message()?;
 
@@ -21,13 +24,13 @@ impl Prompt {
         let commit_details = Self::input_commit_details()?;
         let commit_reference = Self::input_commit_reference()?;
 
-        Ok(PromptInput {
+        Ok(UserResponse::new(
             commit_type,
             commit_message,
             commit_scope,
             commit_details,
             commit_reference,
-        })
+        ))
     }
 
     const COMMIT_TYPE_OPTIONS: [&str; 6] = [
@@ -113,36 +116,5 @@ impl Prompt {
             }
         })
         .map_err(PromptError::from)
-    }
-}
-
-/// プロンプトの入力値を保持する構造体です。
-pub struct PromptInput {
-    commit_type: String,
-    commit_message: String,
-    commit_scope: Option<String>,
-    commit_details: Option<String>,
-    commit_reference: Option<String>,
-}
-
-impl PromptInput {
-    pub fn commit_type(&self) -> &str {
-        &self.commit_type
-    }
-
-    pub fn commit_message(&self) -> &str {
-        &self.commit_message
-    }
-
-    pub fn commit_scope(&self) -> Option<&str> {
-        self.commit_scope.as_deref()
-    }
-
-    pub fn commit_details(&self) -> Option<&str> {
-        self.commit_details.as_deref()
-    }
-
-    pub fn commit_reference(&self) -> Option<&str> {
-        self.commit_reference.as_deref()
     }
 }
