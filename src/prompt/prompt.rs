@@ -17,9 +17,16 @@ impl Prompt {
         let commit_type = Self::select_commit_type()?;
         let commit_message = Self::input_commit_message()?;
 
+        let commit_scope = Self::input_commit_scope()?;
+        let commit_details = Self::input_commit_details()?;
+        let commit_reference = Self::input_commit_reference()?;
+
         Ok(PromptInput {
             commit_type,
             commit_message,
+            commit_scope,
+            commit_details,
+            commit_reference,
         })
     }
 
@@ -52,12 +59,70 @@ impl Prompt {
 
         ans.map_err(PromptError::from)
     }
+
+    const COMMIT_SCOPE_PROMPT: &str = "コミットのスコープを入力してください（オプション）";
+    const COMMIT_SCOPE_PLACEHOLDER: &str = "例: API";
+
+    /// コミットのスコープを入力するプロンプトを実行します。
+    pub fn input_commit_scope() -> PromptResult<Option<String>> {
+        let ans: Result<String, inquire::InquireError> = Text::new(Self::COMMIT_SCOPE_PROMPT)
+            .with_placeholder(Self::COMMIT_SCOPE_PLACEHOLDER)
+            .prompt();
+
+        ans.map(|scope| {
+            if scope.trim().is_empty() {
+                None
+            } else {
+                Some(scope)
+            }
+        })
+        .map_err(PromptError::from)
+    }
+
+    const COMMIT_DETAILS_PROMPT: &str = "コミットの詳細を入力してください（オプション）";
+
+    /// コミットの詳細を入力するプロンプトを実行します。
+    pub fn input_commit_details() -> PromptResult<Option<String>> {
+        let ans: Result<String, inquire::InquireError> =
+            Text::new(Self::COMMIT_DETAILS_PROMPT).prompt();
+
+        ans.map(|details| {
+            if details.trim().is_empty() {
+                None
+            } else {
+                Some(details)
+            }
+        })
+        .map_err(PromptError::from)
+    }
+
+    const COMMIT_REFERENCE_PROMPT: &str = "コミットの参照を入力してください（オプション）";
+    const COMMIT_REFERENCE_PLACEHOLDER: &str = "例: #123";
+
+    /// コミットの参照を入力するプロンプトを実行します。
+    pub fn input_commit_reference() -> PromptResult<Option<String>> {
+        let ans: Result<String, inquire::InquireError> = Text::new(Self::COMMIT_REFERENCE_PROMPT)
+            .with_placeholder(Self::COMMIT_REFERENCE_PLACEHOLDER)
+            .prompt();
+
+        ans.map(|reference| {
+            if reference.trim().is_empty() {
+                None
+            } else {
+                Some(reference)
+            }
+        })
+        .map_err(PromptError::from)
+    }
 }
 
 /// プロンプトの入力値を保持する構造体です。
 pub struct PromptInput {
     commit_type: String,
     commit_message: String,
+    commit_scope: Option<String>,
+    commit_details: Option<String>,
+    commit_reference: Option<String>,
 }
 
 impl PromptInput {
@@ -67,5 +132,17 @@ impl PromptInput {
 
     pub fn commit_message(&self) -> &str {
         &self.commit_message
+    }
+
+    pub fn commit_scope(&self) -> Option<&str> {
+        self.commit_scope.as_deref()
+    }
+
+    pub fn commit_details(&self) -> Option<&str> {
+        self.commit_details.as_deref()
+    }
+
+    pub fn commit_reference(&self) -> Option<&str> {
+        self.commit_reference.as_deref()
     }
 }

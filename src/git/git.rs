@@ -13,7 +13,33 @@ pub struct GitExecutor {
 
 impl GitExecutor {
     pub fn new(input: &PromptInput) -> Self {
-        let commit_message = format!("{}: {}", input.commit_type(), input.commit_message());
+        let mut parts = Vec::new();
+
+        // コミットメッセージのヘッダーを作成
+        let header = if let Some(scope) = input.commit_scope() {
+            format!(
+                "{}（{}）: {}",
+                input.commit_type(),
+                scope,
+                input.commit_message()
+            )
+        } else {
+            format!("{}: {}", input.commit_type(), input.commit_message())
+        };
+        parts.push(header);
+
+        // コミットメッセージの詳細を作成
+        if let Some(details) = input.commit_details() {
+            parts.push(details.to_string());
+        }
+
+        // コミットメッセージの参照を作成
+        if let Some(reference) = input.commit_reference() {
+            parts.push(format!("参照: {}", reference));
+        }
+
+        let commit_message = parts.join("\n\n");
+
         Self { commit_message }
     }
 
