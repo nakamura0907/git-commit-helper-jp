@@ -30,4 +30,7 @@ Git Commit Helper JPはGitのコミットメッセージ作成を助けてくれ
 
 ### Command line options
 
-現在のバージョンではオプションとフラグは提供されていませんが、将来のバージョンで追加される予定です。
+| パラメータ     | 型    | 概要         |
+|----------------|-------|--------------|
+| `-h`, `--help`     | null  | Print help  |
+| `-V`, `--version`  | null  | Print version |
