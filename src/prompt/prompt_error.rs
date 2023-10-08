@@ -1,43 +1,13 @@
-use std::{
-    error::Error,
-    fmt::{self, Display, Formatter},
-};
+use inquire::InquireError;
+use thiserror::Error;
 
-/// プロンプトのエラーを表現するカスタムエラー構造体です。
-#[derive(Debug)]
-pub struct PromptError {
-    message: String,
-}
-
-impl Display for PromptError {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        write!(f, "{}", self.message)
-    }
-}
-impl Error for PromptError {}
-
-impl PromptError {
-    pub fn new(message: String) -> Self {
-        PromptError { message }
-    }
+/// プロンプト処理中のエラーを表す列挙型です。
+#[derive(Error, Debug)]
+pub enum PromptError {
+    /// inquireパッケージに起因するエラーです。
+    #[error("プロンプトエラー: {0}")]
+    InquireError(#[from] InquireError),
 }
 
 /// `PromptError`を`Result`型でラップした型です。
 pub type PromptResult<T> = Result<T, PromptError>;
-
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    #[test]
-    fn test_prompt_error() {
-        let prompt_error = PromptError::new("error".to_string());
-        assert_eq!(prompt_error.to_string(), "error");
-    }
-
-    #[test]
-    fn test_prompt_error_impl_error() {
-        let prompt_error = PromptError::new("error".to_string());
-        assert!(prompt_error.source().is_none());
-    }
-}

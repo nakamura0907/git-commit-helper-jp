@@ -23,26 +23,34 @@ impl Prompt {
         })
     }
 
-    fn select_commit_type() -> PromptResult<String> {
-        let options = vec!["機能追加", "バグ修正", "その他"];
-        let ans: Result<&str, inquire::InquireError> =
-            Select::new("コミット種別を選択してください", options).prompt();
+    const COMMIT_TYPE_OPTIONS: [&str; 6] = [
+        "機能追加",
+        "バグ修正",
+        "テスト",
+        "リファクタリング",
+        "ドキュメンテーション",
+        "その他",
+    ];
+    const COMMIT_TYPE_PROMPT: &str = "コミットの種類を選択してください";
 
-        match ans {
-            Ok(choice) => Ok(choice.to_string()),
-            Err(e) => Err(PromptError::new(e.to_string())),
-        }
+    /// コミットの種類を選択するプロンプトを実行します。
+    fn select_commit_type() -> PromptResult<String> {
+        let ans: Result<&str, inquire::InquireError> =
+            Select::new(Self::COMMIT_TYPE_PROMPT, Self::COMMIT_TYPE_OPTIONS.to_vec()).prompt();
+
+        ans.map(|choice| choice.to_string())
+            .map_err(PromptError::from)
     }
 
+    const COMMIT_MESSAGE_PROMPT: &str = "コミットメッセージを入力してください";
+
+    /// コミットメッセージを入力するプロンプトを実行します。
     fn input_commit_message() -> PromptResult<String> {
-        let ans: Result<String, inquire::InquireError> = Text::new("コミットメッセージ")
+        let ans: Result<String, inquire::InquireError> = Text::new(Self::COMMIT_MESSAGE_PROMPT)
             .with_validator(required!())
             .prompt();
 
-        match ans {
-            Ok(ans) => Ok(ans.to_string()),
-            Err(e) => Err(PromptError::new(e.to_string())),
-        }
+        ans.map_err(PromptError::from)
     }
 }
 
