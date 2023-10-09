@@ -63,9 +63,51 @@ impl Git {
             return Err(GitError::CommitError(std_error));
         }
 
+        // Gitコマンドの出力を表示する
         let std = String::from_utf8_lossy(&output.stdout);
         println!("{}", std);
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::prompt::UserResponse;
+
+    use super::Git;
+
+    #[test]
+    fn test_git_new() {
+        let respones = UserResponse::new(
+            "commit_type".to_string(),
+            "commit_message".to_string(),
+            None,
+            None,
+            None,
+        );
+        let git = Git::new(&respones);
+
+        assert_eq!(
+            git.commit_message,
+            "commit_type: commit_message".to_string()
+        );
+    }
+
+    #[test]
+    fn test_git_new_with_option() {
+        let respones = UserResponse::new(
+            "commit_type".to_string(),
+            "commit_message".to_string(),
+            Some("commit_scope".to_string()),
+            Some("commit_details".to_string()),
+            Some("commit_reference".to_string()),
+        );
+        let git = Git::new(&respones);
+
+        assert_eq!(
+            git.commit_message,
+            "commit_type（commit_scope）: commit_message\n\ncommit_details\n\n参照: commit_reference".to_string()
+        );
     }
 }
