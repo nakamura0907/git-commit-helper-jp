@@ -13,33 +13,29 @@ pub struct Git {
 
 impl Git {
     pub fn new(input: &UserResponse) -> Self {
-        let mut parts = Vec::new();
-
-        // コミットメッセージのヘッダーを作成
-        let header = if let Some(scope) = input.commit_scope() {
-            format!(
+        let header = match input.commit_scope() {
+            Some(scope) => format!(
                 "{}（{}）: {}",
                 input.commit_type(),
                 scope,
                 input.commit_message()
-            )
-        } else {
-            format!("{}: {}", input.commit_type(), input.commit_message())
+            ),
+            None => format!("{}: {}", input.commit_type(), input.commit_message()),
         };
-        parts.push(header);
 
-        // コミットメッセージの詳細を作成
-        if let Some(details) = input.commit_details() {
-            parts.push(details.to_string());
-        }
-
-        // コミットメッセージの参照を作成
-        if let Some(reference) = input.commit_reference() {
-            parts.push(format!("参照: {}", reference));
-        }
+        let parts: Vec<_> = vec![
+            header,
+            input.commit_details().unwrap_or_default().to_string(),
+            input
+                .commit_reference()
+                .map(|r| format!("参照: {}", r))
+                .unwrap_or_default(),
+        ]
+        .into_iter()
+        .filter(|s| !s.is_empty())
+        .collect();
 
         let commit_message = parts.join("\n\n");
-
         Self { commit_message }
     }
 
