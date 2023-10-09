@@ -1,7 +1,7 @@
 mod git;
 mod prompt;
 
-use git::GitExecutor;
+use git::Git;
 use prompt::Prompt;
 use std::error::Error;
 
@@ -11,8 +11,8 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     let input = prompt.interact()?;
 
     // Gitコマンドを実行する
-    let executor = GitExecutor::new(&input);
-    executor.execute()?;
+    let git = Git::new(&input);
+    git.execute()?;
 
     Ok(())
 }

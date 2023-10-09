@@ -7,11 +7,11 @@ use super::git_error::{GitError, GitResult};
 /// Gitコマンドを実行する構造体です。
 ///
 /// `commit_message`をもとにコミットコマンドを実行します。
-pub struct GitExecutor {
+pub struct Git {
     commit_message: String,
 }
 
-impl GitExecutor {
+impl Git {
     pub fn new(input: &UserResponse) -> Self {
         let mut parts = Vec::new();
 
@@ -51,19 +51,13 @@ impl GitExecutor {
 
     /// 実際にGitコマンドを実行します。
     fn run_git_command(&self) -> Result<std::process::Output, GitError> {
-        let command = format!("git commit -m '{}'", &self.commit_message);
-        if cfg!(target_os = "windows") {
-            Command::new("cmd")
-                .args(["/C", &command])
-                .output()
-                .map_err(GitError::from)
-        } else {
-            Command::new("sh")
-                .arg("-c")
-                .arg(&command)
-                .output()
-                .map_err(GitError::from)
-        }
+        let result = Command::new("git")
+            .arg("commit")
+            .arg("-m")
+            .arg(&self.commit_message)
+            .output();
+
+        result.map_err(GitError::from)
     }
 
     /// コマンドの出力を処理します。
