@@ -6,7 +6,7 @@ use prompt::Prompt;
 use std::error::Error;
 
 pub fn run() -> Result<(), Box<dyn Error>> {
-    // 対話型プロンプトを実行する
+    // 対話型プロンプトでコミットに関する情報の入力を促す
     let prompt = Prompt::new();
     let input = prompt.interact()?;
 
