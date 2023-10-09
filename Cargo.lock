@@ -147,7 +147,7 @@ checksum = "23d2f3407d9a573d666de4b5bdf10569d73ca9478087346697dcbae6244bfbcd"
 
 [[package]]
 name = "git-commit-helper-jp"
-version = "0.1.0"
+version = "1.0.4"
 dependencies = [
  "clap",
  "inquire",
