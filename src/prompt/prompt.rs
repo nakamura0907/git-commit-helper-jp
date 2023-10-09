@@ -48,7 +48,7 @@ impl Prompt {
 
     /// コミット種類の選択をユーザーに促します。
     fn select_for_commit_type() -> PromptResult<String> {
-        let ans: Result<&str, inquire::InquireError> =
+        let ans =
             Select::new(Self::COMMIT_TYPE_PROMPT, Self::COMMIT_TYPE_OPTIONS.to_vec()).prompt();
 
         ans.map(|choice| choice.to_string())
@@ -59,7 +59,7 @@ impl Prompt {
 
     /// コミットメッセージの入力をユーザーに促します。
     fn ask_for_commit_message() -> PromptResult<String> {
-        let ans: Result<String, inquire::InquireError> = Text::new(Self::COMMIT_MESSAGE_PROMPT)
+        let ans = Text::new(Self::COMMIT_MESSAGE_PROMPT)
             .with_validator(required!())
             .prompt();
 
@@ -71,7 +71,7 @@ impl Prompt {
 
     /// コミットスコープの入力をユーザーに促します。
     fn ask_for_commit_scope() -> PromptResult<Option<String>> {
-        let ans: Result<String, inquire::InquireError> = Text::new(Self::COMMIT_SCOPE_PROMPT)
+        let ans = Text::new(Self::COMMIT_SCOPE_PROMPT)
             .with_placeholder(Self::COMMIT_SCOPE_PLACEHOLDER)
             .prompt();
 
@@ -89,8 +89,7 @@ impl Prompt {
 
     /// コミットの詳細の入力をユーザーに促します。
     fn ask_for_commit_details() -> PromptResult<Option<String>> {
-        let ans: Result<String, inquire::InquireError> =
-            Text::new(Self::COMMIT_DETAILS_PROMPT).prompt();
+        let ans = Text::new(Self::COMMIT_DETAILS_PROMPT).prompt();
 
         ans.map(|details| {
             if details.trim().is_empty() {
@@ -107,7 +106,7 @@ impl Prompt {
 
     /// コミットの参照の入力をユーザーに促します。
     fn ask_for_commit_reference() -> PromptResult<Option<String>> {
-        let ans: Result<String, inquire::InquireError> = Text::new(Self::COMMIT_REFERENCE_PROMPT)
+        let ans = Text::new(Self::COMMIT_REFERENCE_PROMPT)
             .with_placeholder(Self::COMMIT_REFERENCE_PLACEHOLDER)
             .prompt();
 
