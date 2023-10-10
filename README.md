@@ -4,6 +4,8 @@ Git Commit Helper JPはGitのコミットメッセージ作成を助けてくれ
 
 対話型プロンプトを通じてコミット種別の選択やコミットメッセージの入力を行い、最終的にはコミットを実行します。
 
+![DEMO](https://github.com/nakamura0907/git-commit-helper-jp/assets/53244048/cb8cb1e7-2908-4b94-a384-dc67d99497b7)
+
 ## Install
 
 現バージョンでは、以下の手順でインストールできます。
